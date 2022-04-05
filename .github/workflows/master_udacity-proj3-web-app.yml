@@ -26,9 +26,12 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+        
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
-
+      
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v2
         with:
@@ -50,11 +53,11 @@ jobs:
         with:
           name: python-app
           path: .
-
+          
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
           app-name: 'udacity-proj3-web-app'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6F36F2634FB34D9BA81A04D2CE7E59C8 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E06D7D247E7C4EA39AC27C94129228BB }}
