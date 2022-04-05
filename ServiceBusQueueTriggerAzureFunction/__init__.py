@@ -50,6 +50,7 @@ def main(msg: func.ServiceBusMessage):
         # TODO: Close connection
         if connection is not None:
             connection.close()
+            cursor.close()
             logging.info('Closed connection')
 
 
