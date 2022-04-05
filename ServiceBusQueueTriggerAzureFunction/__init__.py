@@ -26,16 +26,17 @@ def main(msg: func.ServiceBusMessage):
         logging.info('Type of notification_id: %s', type(notification_id))
         notification = get_notification_by_id(notification_id, cursor)
         
-        logging.info('Notification fetched: %s', notification, cursor)
+        logging.info('Notification fetched: %s', notification)
 
         # TODO: Get attendees email and name
         attendees = get_attendees(cursor)
         
         # TODO: Loop through each attendee and send an email with a personalized subject
         for attendee in attendees:
-            logging.info(f'Sending email to: {attendee}')
-            subject = '{first_name}: {subject}'.format(attendee.first_name, notification.subject)
-            notification_count += send_email(attendee.email, subject, notification.message)
+            logging.info(f'Sending email to: {attendee.first_name} {attendee.last_name}')
+            # subject = '{first_name}: {subject}'.format(attendee.first_name, notification.subject)
+            # logging.info(f'Subject {subject}')
+            notification_count += send_email(attendee.email, notification.subject, notification.message)
         
         logging.info(f'Notified {notification_count} attendees')
             
@@ -82,7 +83,7 @@ Returns:
 def get_notification_by_id(notification_id, cursor):
     logging.info('Get notification by id: %s', str(notification_id))
     # PostgreSQL query
-    cursor.execute('SELECT MESSAGE, SUBJECT FROM NOTIFICATION WHERE ID = %s', (id))
+    cursor.execute("SELECT MESSAGE, SUBJECT FROM NOTIFICATION WHERE ID = %s;", [notification_id])
     # Get row
     row = cursor.fetchone()
     notification = Notification(row[0], row[1])
@@ -97,7 +98,7 @@ Returns:
 """
 def get_attendees(cursor):
     # PostgreSQL query
-    cursor.execute('SELECT FIRST_NAME, LAST_NAME, EMAIL FROM ATTENDEE')
+    cursor.execute("SELECT FIRST_NAME, LAST_NAME, EMAIL FROM ATTENDEE;")
     # Get all rows 
     rows = cursor.fetchall()
     # Attendee containers
@@ -107,7 +108,6 @@ def get_attendees(cursor):
         attendee = Attendee(row[0], row[1], row[2])
         attendees.append(attendee)
         
-    
     return attendees
 
 """
@@ -118,9 +118,9 @@ Parameter:
 Returns: 
     _type_: 0 or 1 as failure or successful respectively
 """
-def send_email(email, subject, body):
+def send_email(email, subject, message):
     # Get send grip api key from environment variables
-    send_grid_api_key = os.environ.get('SEND_GRID_API_KEY')
+    send_grid_api_key = "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"
     
     # Successful sent notifications
     count = 0
@@ -128,10 +128,10 @@ def send_email(email, subject, body):
     if send_grid_api_key:
         try:
             # Create email object
-            email_message = Mail(from_email='omar.flores.cs@outlook.com',
+            email_message = Mail(from_email='omarflores2021@outlook.com',
                                 to_emails=email,
                                 subject=subject,
-                                plain_text_content=body)
+                                plain_text_content=message)
             # Initiate send grid client
             send_grid_client = SendGridAPIClient(send_grid_api_key)
             # Send email
@@ -153,7 +153,7 @@ Parameter:
 """
 def update_notification_table(connection, cursor, notification_id, notification_count, completed_date):
     # PostgreSQL query
-    cursor.execute('UPDATE NOTIFICATION SET STATUS = %s, COMPLETED_DATE = %s WHERE ID = %s', (notification_count, completed_date, notification_id))
+    cursor.execute("UPDATE NOTIFICATION SET STATUS = %s, COMPLETED_DATE = %s WHERE ID = %s;", (notification_count, completed_date, notification_id,))
     # Commit transaction
     connection.commit()
     
