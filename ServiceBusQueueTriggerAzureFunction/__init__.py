@@ -5,7 +5,6 @@ import os
 from datetime import datetime
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from config import BaseConfig
 
 def main(msg: func.ServiceBusMessage):
     logging.info('Python ServiceBus queue trigger processed message: %s',
@@ -63,10 +62,10 @@ def connect_database():
     try:
         logging.info('Connecting to PostgreSQL database...')
         # Connecting to server
-        connection = psycopg2.connect(host=BaseConfig.PostgreSQL,
-                                    database=BaseConfig.POSTGRES_DB,
-                                    user=BaseConfig.POSTGRES_USER,
-                                    password=BaseConfig.POSTGRES_PW)
+        connection = psycopg2.connect(host='udacity-proj3-server.postgres.database.azure.com',
+                                    database='techconfdb',
+                                    user='xdestyn@udacity-proj3-server',
+                                    password='ComplexEntity14!' )
         
     except(Exception, psycopg2.DatabaseError) as error:
         logging.eror(error)
@@ -129,7 +128,7 @@ def send_email(email, subject, body):
     if send_grid_api_key:
         try:
             # Create email object
-            email_message = Mail(from_email=BaseConfig.ADMIN_EMAIL_ADDRESS,
+            email_message = Mail(from_email='omar.flores.cs@outlook.com',
                                 to_emails=email,
                                 subject=subject,
                                 plain_text_content=body)
