@@ -66,21 +66,22 @@ def notification():
         try:
             db.session.add(notification)
             db.session.commit()
+            
+            logging.info(f'Notification added successfull with message: {notification.message} and subject: {notification.subject}')
+            
 
             ##################################################
             ## TODO: Refactor This logic into an Azure Function
             ## Code below will be replaced by a message queue
             #################################################
-            attendees = Attendee.query.all()
-
-            for attendee in attendees:
-                subject = '{}: {}'.format(attendee.first_name, notification.subject)
-                send_email(attendee.email, subject, notification.message)
-
-            notification.completed_date = datetime.utcnow()
-            notification.status = 'Notified {} attendees'.format(len(attendees))
-            db.session.commit()
+            
+            # Get notification ID
+            notification_id = notification.id
+            
+            logging.info(f'Notification id: {notification_id}')
+            
             # TODO Call servicebus queue_client to enqueue notification ID
+            
 
             #################################################
             ## END of TODO

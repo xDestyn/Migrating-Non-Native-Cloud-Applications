@@ -121,7 +121,7 @@ Returns:
 """
 def send_email(email, subject, message):
     # Get send grip api key from environment variables
-    send_grid_api_key = "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"
+    send_grid_api_key = os.environ.get('SEND_GRID_API_KEY')
     
     # Successful sent notifications
     count = 0
