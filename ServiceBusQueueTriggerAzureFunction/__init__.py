@@ -67,7 +67,7 @@ def connect_database():
         connection = psycopg2.connect(host='udacity-proj3-server.postgres.database.azure.com',
                                     database='techconfdb',
                                     user='xdestyn@udacity-proj3-server',
-                                    password='ComplexEntity14!' )
+                                    password=os.environ.get('POSTGRES_PW'))
         
     except(Exception, psycopg2.DatabaseError) as error:
         logging.eror(error)
