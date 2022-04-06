@@ -81,7 +81,11 @@ def notification():
             logging.info(f'Notification id: {notification_id}')
             
             # TODO Call servicebus queue_client to enqueue notification ID
+            message = Message(str(notification_id))
             
+            logging.info(f'Message processed: {message}')
+            
+            queue_client.send(message)
 
             #################################################
             ## END of TODO
