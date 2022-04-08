@@ -41,7 +41,7 @@ def main(msg: func.ServiceBusMessage):
         logging.info(f'Notified {notification_count} attendees')
             
         # TODO: Update the notification table by setting the completed date and updating the status with the total number of attendees notified
-        update_notification_table(connection, cursor, notification_id, notification_count, datetime.today())
+        update_notification_table(connection, cursor, notification_id, notification_count, datetime.utcnow())
         
 
     except (Exception, psycopg2.DatabaseError) as error:
@@ -67,7 +67,7 @@ def connect_database():
         connection = psycopg2.connect(host='udacity-proj3-server.postgres.database.azure.com',
                                     database='techconfdb',
                                     user='xdestyn@udacity-proj3-server',
-                                    password=os.environ.get('POSTGRES_PW'))
+                                    password=os.getenv('POSTGRES_PW'))
         
     except(Exception, psycopg2.DatabaseError) as error:
         logging.eror(error)
@@ -121,7 +121,7 @@ Returns:
 """
 def send_email(email, subject, message):
     # Get send grip api key from environment variables
-    send_grid_api_key = os.environ.get('SEND_GRID_API_KEY')
+    send_grid_api_key = os.getenv('SEND_GRID_API_KEY')
     
     # Successful sent notifications
     count = 0
