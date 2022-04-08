@@ -71,12 +71,55 @@ You will need to install the following locally:
 
 Complete a month cost analysis of each Azure resource to give an estimate total cost using the table below:
 
+# Free / Basic Tier
+
 | Azure Resource            | Service Tier | Monthly Cost |
 | ------------------------- | ------------ | ------------ |
 | _Azure Postgres Database_ | Basic        | 25.32        |
 | _Azure Service Bus_       | Basic        | 0.05         |
 | _Azure Web App Service_   | F1           | Free         |
 | _Azure Storage Account_   | Basic        | < 0.1        |
+| _Azure Function_          | Basic        | .20/mill     |
+
+For Azure Functions, we are going to be charged $.20/million execution. There is a premium plan that we can opt in that does
+not charge for execution, but instead $.173/ vCPU/hr and Memory .0123GB/hr. But not sure for our use, that would be needed.
+
+# Production Cost Analysis
+
+| Azure Resource            | Service Tier | Monthly Cost |
+| ------------------------- | ------------ | ------------ |
+| _Azure Postgres Database_ | v4 20GiB M   | 255.792      |
+| _Azure Service Bus_       | Basic        | 5.00         |
+| _Azure Web App Service_   | P1v2         | 146          |
+| _Azure Storage Account_   | Hot          | < 5          |
+| _Azure Function_          | Basic        | .20/mill     |
+
+# Azure Postgres Database
+
+Good starting point. Making sure we have not too little and not too many memory. Evaluate
+as we proceed and determine the amount of records we're storing in our database.
+
+# Service Bus Analysis
+
+The service bus cost above is strictly if we are only dealing with queues and messages.
+The basic tier essentially.
+We have the ability to opt into the standard qhere that provides topics, transactions,
+sessions, forwardTo/SendVia, etc.
+
+# Web App Service Analysis
+
+P1v2 would be a test starting point. 1 Core 3.5 GB Ram 250GB Storage.
+This can be changed as we evaluate our traffic, seeing if it's necessary.
+
+# Azure Storage Account Analysis
+
+I would say the hot plan would be okay. Don't think the premium plan would be necessary.
+
+# Azure Function Analysis
+
+This is whether we stay with the basic or premium. We'll start with the basic, as we'll
+get charged per execution. If we find the benefits that premium provides satisfactory,
+then we can switch.
 
 ## Architecture Explanation
 
